@@ -61,6 +61,7 @@ var totalEnemyDamage = 0;
 
 //HTML Elements
 var gameSpace = $("#gameSpace");
+var enemies;
 
 // FUNCTIONS
 
@@ -104,9 +105,9 @@ function refreshPageStats() {}
 function initRPG() {
     //Display choose a character prompt
     //Display Character Choices
-    var chooseACharacter = $("<div>");
-    chooseACharacter.addClass("characterspace");
-    gameSpace.append(chooseACharacter);
+    var enemies = $("<div>");
+    enemies.addClass("enemies");
+    gameSpace.append(enemies);
     var theEnemies = Object.keys(characters);
 
     //get enemy stats
@@ -125,7 +126,7 @@ function initRPG() {
         if (i == 0) {
             characterImg.addClass("selectedCharacter");
         }
-        characterImg.appendTo(chooseACharacter);
+        characterImg.appendTo(enemies);
     }
 
     //Clicky image zoom
@@ -137,18 +138,68 @@ function initRPG() {
     //Create confirm character button
     var confirmCharacterButton = $("<button>");
     confirmCharacterButton.text("Confirm Character and Begin");
+    confirmCharacterButton.attr("id", "confirmCharacter");
+    confirmCharacterButton.css("margin", "50px");
     confirmCharacterButton.click(function() {
+        // turn off click stuff
+        confirmCharacterButton.off("click");
+        confirmCharacterButton.remove();
+        $(".characterImgs").off("click");
+        // create your character
         yourcharacter = $(".selectedCharacter").attr("data_name");
         characters[yourcharacter].isEnemy = false;
+        // gen stats
         genYourStats();
+        //start the game
         playGame();
-        confirmCharacterButton.off("click");
-        $(".characterImgs").off("click");
     });
     gameSpace.append(confirmCharacterButton);
 }
 
-function playGame() {}
+function playGame() {
+    gameSpace.empty();
+    var enemies = $("<div>");
+    enemies.addClass("enemies");
+    gameSpace.append(enemies);
+    var theEnemies = Object.keys(characters);
+
+    //get enemy stats
+    var enemyStats = generateCharacterStats(theEnemies.length);
+
+    //GENERATE IMAGES and add character stats
+    for (var i = 0; i < theEnemies.length; i++) {
+        var charname = theEnemies[i];
+        if (charname != yourcharacter) {
+            characters[charname]["stats"] = enemyStats[i];
+            var characterImg = $("<img />", {
+                data_name: charname,
+                src: characters[charname]["srcpath"],
+                alt: charname
+            });
+            characterImg.addClass("battleCharacterImgs");
+            characterImg.appendTo(enemies);
+        }
+    }
+    enemies.css({ width: "400px", display: "block", float: "right" });
+    $("#gameSpace").append(enemies);
+
+    // battlefield i'm drunk lol
+    var battleSpace = $("<opponentSpace>");
+    battleSpace.attr("id", "battleSpace");
+    $("#gameSpace").append(battleSpace);
+    //opponenet space
+    var opponenet = $("<div>");
+    opponenet.css({ display: "block", float: "right" });
+    opponenet.text("RAWR");
+    battleSpace.append(opponenet);
+    //your space
+    var yourspace = $("<div>");
+    yourspace.attr("id", "yourSpace");
+    yourspace.css({ display: "block", float: "left" });
+    yourspace.text(yourcharacter);
+    battleSpace.append(yourspace);
+    //move characters around
+}
 
 // Basic interaction click stuff
 // INLINE SCRIPT

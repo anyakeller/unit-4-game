@@ -16,7 +16,6 @@ h1 {
 
 /* Character Image */
 .characterspace {
-    width: 900px;
     margin: 40px 10px;
 }
 
@@ -44,9 +43,49 @@ h1 {
     height: 250px;
 }
 
-#blue {
+.battleCharacterImgs {
+    z-index: 1;
+    height: 100px;
+    display: inline-block;
+    position: relative;
+    border-radius: 25%;
+    background-color: black;
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+}
+
+.battleCharacterImgs:hover:not(.selectedCharacter) {
+    /* animation-name: selectCharAnimate;
+    animation-duration: 1s; */
+    z-index: 2;
+    transform: scale(1.25);
+}
+.battleSelectedCharacter {
+    /* animation-name: selectCharAnimate;
+    animation-duration: 1s; */
+    z-index: 2;
+    height: 125px;
+}
+
+.shrinkLeave {
+    transform: scale(0);
+}
+.growAppear {
+    transform: scale(1);
+}
+
+#blueteam {
     background-color: blue;
 }
-#red {
+#redteam {
     background-color: red;
+}
+
+/* Layout */
+.your_space {
+    width: 250px;
+}
+
+.battlefield {
+    margin: auto;
 }
