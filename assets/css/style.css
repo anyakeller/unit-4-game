@@ -1,13 +1,3 @@
-/* Customized fundimental CSS overwritten with reset.css */
-html {
-    font-family: Arial, Helvetica, sans-serif;
-}
-h1 {
-    font-size: 24px;
-    padding: 15px 15px;
-    margin: auto;
-}
-
 /* Game formatting */
 #gameSpace {
     margin: auto;
@@ -21,7 +11,7 @@ h1 {
 
 .characterImgs {
     z-index: 1;
-    height: 200px;
+    height: 150px;
     display: inline-block;
     position: relative;
     border-radius: 25%;
@@ -40,12 +30,12 @@ h1 {
     /* animation-name: selectCharAnimate;
     animation-duration: 1s; */
     z-index: 2;
-    height: 250px;
+    height: 200px;
 }
 
 .battleCharacterImgs {
     z-index: 1;
-    height: 100px;
+    height: 150px;
     display: inline-block;
     position: relative;
     border-radius: 25%;
@@ -74,18 +64,28 @@ h1 {
     transform: scale(1);
 }
 
-#blueteam {
+.blueteam {
+    border-radius: 25%;
     background-color: blue;
 }
-#redteam {
+.redteam {
+    border-radius: 25%;
     background-color: red;
 }
 
 /* Layout */
-.your_space {
-    width: 250px;
+
+.enemies {
+    padding: 10px 20px;
+    margin: auto;
+    display: block;
 }
 
-.battlefield {
-    margin: auto;
+#battleSpace {
+    margin: 20px 10px;
+    padding: 10px;
+}
+
+#attack {
+    margin: 20px auto;
 }
