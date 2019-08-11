@@ -70,7 +70,7 @@ var gameSpace = $("#gameSpace");
 var battleGame;
 var battleJumboRow;
 var attackbtn;
-
+var opp;
 // FUNCTIONS
 
 // Takes number of hp cp pairs to generate and generates aray of array pairs
@@ -91,9 +91,14 @@ function generateCharacterStats(characters) {
 }
 // initial generate your stat pair
 function genYourStats() {
-    yourtotalhp = totalEnemyDamage * 5;
+    yourtotalhp = Math.floor(
+        totalEnemyDamage * (5 * Math.random() + 5 - Math.random() * 5)
+    );
     yourbaseap = Math.floor(
-        Math.pow(totalEnemyHealth / (Math.random() * totalEnemyDamage), 0.5)
+        Math.pow(
+            totalEnemyHealth / (Math.random() * totalEnemyDamage),
+            1 - Math.random() * 0.75
+        )
     );
 
     currenthp = yourtotalhp;
@@ -106,26 +111,50 @@ function genYourStats() {
 function initRPG() {
     //Display Character Choices
     var chooseCharacter = $("<div>");
-    chooseCharacter.addClass("chooseCharacter row ");
+    chooseCharacter.addClass("chooseCharacter row px-5");
     gameSpace.append(chooseCharacter);
     var theEnemies = Object.keys(characters);
+
+    //help
     var halp = $("<h2>");
     halp.addClass("py-5");
     halp.text("Choose your fighter");
     chooseCharacter.append(halp);
 
+    //Create confirm character button
+    var confirmCharacterButton = $("<button>");
+    confirmCharacterButton.text("Confirm Character and Begin");
+    confirmCharacterButton.attr({ id: "confirmCharacter", type: "button" });
+    confirmCharacterButton.addClass("btn btn-primary btn-lg");
+
+    confirmCharacterButton.css("margin", "50px");
+    confirmCharacterButton.click(function() {
+        // turn off click stuff
+        confirmCharacterButton.off("click");
+        confirmCharacterButton.remove();
+        $(".characterImgs").off("click");
+        // create your character
+        yourcharacter = $(".selectedCharacter").attr("data_name");
+        characters[yourcharacter].isEnemy = false;
+        // gen stats
+        genYourStats();
+        //start the game
+        playGame();
+    });
+    confirmCharacterButton.appendTo(chooseCharacter);
+
     //get enemy stats
     var enemyStats = generateCharacterStats(theEnemies.length);
 
     var cardcol = $("<div>");
-    cardcol.addClass("card-columns");
+    cardcol.addClass("card-columns choosecharactercols");
     cardcol.appendTo(chooseCharacter);
     //GENERATE IMAGES and add character stats
     for (var i = 0; i < theEnemies.length; i++) {
         var charname = theEnemies[i];
 
         var suchACard = $("<div>");
-        suchACard.addClass("card suchacard");
+        suchACard.addClass("card suchacard m-4 ");
         suchACard.attr("data_name", charname);
 
         characters[charname]["enemystats"] = enemyStats[i];
@@ -167,53 +196,31 @@ function initRPG() {
             .children(".card-title")
             .addClass("text-success");
     });
-
-    //Create confirm character button
-    var confirmCharacterButton = $("<button>");
-    confirmCharacterButton.text("Confirm Character and Begin");
-    confirmCharacterButton.attr({ id: "confirmCharacter", type: "button" });
-    confirmCharacterButton.addClass("btn btn-primary");
-
-    confirmCharacterButton.css("margin", "50px");
-    confirmCharacterButton.click(function() {
-        // turn off click stuff
-        confirmCharacterButton.off("click");
-        confirmCharacterButton.remove();
-        $(".characterImgs").off("click");
-        // create your character
-        yourcharacter = $(".selectedCharacter").attr("data_name");
-        characters[yourcharacter].isEnemy = false;
-        // gen stats
-        genYourStats();
-        //start the game
-        playGame();
-    });
-    gameSpace.append(confirmCharacterButton);
 }
 
 //set up gameplay visuals
 function displayGameplay() {
     gameSpace.empty();
     battleGame = $("<div>");
-    battleGame.addClass("row full-battle ");
+    battleGame.addClass("row full-battle");
     gameSpace.append(battleGame);
 
     // battlefield i'm drunk lol
     var battleSpace = $("<div>");
-    battleSpace.addClass("col-md-10");
+    battleSpace.addClass("col-md-8");
     battleGame.append(battleSpace);
 
-    //help me
-    var battleSpaceRow = $("<div>");
-    battleSpaceRow.addClass("row");
-    battleSpaceRow.attr("id", "battleSpace");
-    battleSpace.append(battleSpaceRow);
+    //battlefield label
+    var blabel = $("<h2>");
+    blabel.text("BATTLEFIELD");
+    blabel.addClass("text-center align-middle ");
+    battleSpace.append(blabel);
 
     //battlerumbo
     var battleJumbo = $("<div>");
-    battleJumbo.addClass("jumbotron");
+    battleJumbo.addClass("jumbotron my-2");
     battleJumbo.attr("id", "battleSpace");
-    battleSpaceRow.append(battleJumbo);
+    battleSpace.append(battleJumbo);
 
     //help me
     battleJumboRow = $("<div>");
@@ -279,19 +286,26 @@ function displayGameplay() {
     opponenet.addClass("col-md-6 col-sm-12 opponentZone");
     battleJumboRow.append(opponenet);
     var choosetext = $("<h2>");
-    choosetext.addClass("text-center align-middle oppspacetext");
-    choosetext.text("choose an opponent");
+    choosetext.addClass("text-center oppspacetext");
+    choosetext.css("margin-top", "50%");
+    choosetext.text("CHOOSE AN OPPONENT");
     opponenet.append(choosetext);
 
     //enemies
     var enemydiv = $("<div>");
-    enemydiv.addClass("col-md-2 enemies");
+    enemydiv.addClass("col-md-4 enemies");
     var enemiestext = $("<h2>");
     enemiestext.addClass("text-center align-middle enemiesText");
     enemiestext.text("Enemies");
     enemydiv.append(enemiestext);
-    var theEnemies = Object.keys(characters);
 
+    //enemy card deck
+    var enemydeck = $("<div>");
+    enemydeck.addClass("card-columns enemybankcols");
+    enemydiv.append(enemydeck);
+
+    //get the enemies
+    var theEnemies = Object.keys(characters);
     //get enemy stats
     var enemyStats = generateCharacterStats(theEnemies.length);
 
@@ -302,11 +316,11 @@ function displayGameplay() {
         if (charname != yourcharacter) {
             var suchACard = $("<div>");
             suchACard.addClass(
-                "enemybank card my-3 suchacard selectedCharacter bg-transparent"
+                "enemybank card my-1 suchacard selectedCharacter bg-transparent"
             );
             //opponent name
             var oppname = $("<div>");
-            oppname.addClass("card-header");
+            oppname.addClass("card-header p-2");
             oppname.text(charname);
             suchACard.append(oppname);
             //add image
@@ -324,8 +338,8 @@ function displayGameplay() {
             characterImg.appendTo(suchACard);
             //opponent health
             var oppdatadiv = $("<div>");
-            oppdatadiv.addClass("card-body");
-            var opphealth = $("<h2>");
+            oppdatadiv.addClass("card-body p-2");
+            var opphealth = $("<h3>");
             opphealth.addClass(
                 "card-title charactertext selecetedCharacterText"
             );
@@ -333,7 +347,7 @@ function displayGameplay() {
             opphealth.text("HP: " + characters[charname]["enemystats"][0]);
             oppdatadiv.append(opphealth);
             suchACard.append(oppdatadiv);
-            suchACard.appendTo(enemydiv);
+            suchACard.appendTo(enemydeck);
         }
     }
     battleGame.append(enemydiv);
@@ -358,8 +372,9 @@ function playGame() {
 //display opponent
 function setOpponent(name) {
     $(".oppspacetext").text("Current Opponent");
-    var oppzone = $(".opponentZone");
-    var opp = $(".opponent");
+    $(".oppspacetext").css("margin-top", "");
+    oppzone = $(".opponentZone");
+    opp = $(".opponent");
     currentopponent = name;
     opp.appendTo(oppzone);
 }
@@ -369,6 +384,7 @@ function attack(name) {
     var currop = characters[name];
     currop["enemystats"][0] = currop["enemystats"][0] - currentap;
     if (currop["enemystats"][0] <= 0) {
+        console.log("Defeated");
         enemies_defeated++;
         if (enemies_defeated == 8) {
             gameSpace.empty();
@@ -389,12 +405,9 @@ function attack(name) {
             return true;
         } else {
             currentopponent = null;
-            var opp = $("#opponent");
             opp.empty();
-            var oppspacetext = $("<h2>");
-            oppspacetext.text("Opponent Defeated! Choose a new opponent");
-
-            opp.append(oppspacetext);
+            $(".oppspacetext").text("Opponent Defeated! Choose a new opponent");
+            $(".oppspacetext").css("margin-top", "50%");
         }
     } else {
         $("#opphealth").text("HP: " + Math.floor(currop["enemystats"][0]));
@@ -407,7 +420,7 @@ function attack(name) {
     } else {
         var you = $("#yourspace");
         you.empty();
-        var youWinLose = $("<h2>");
+        var youWinLose = $("<h3>");
         youWinLose.text("You Lost");
         you.append(youWinLose);
         $("#yourhealth").text("HP: " + 0 + "YOU DED");

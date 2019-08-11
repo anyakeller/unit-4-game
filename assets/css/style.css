@@ -16,8 +16,6 @@
     position: relative;
     /* border-radius: 25%; */
     background-color: black;
-    transition: 0.5s;
-    -webkit-transition: 0.5s;
 }
 
 .battleCharacterImgs {
@@ -26,28 +24,6 @@
     position: relative;
     /* border-radius: 25%; */
     background-color: black;
-    transition: 0.5s;
-    -webkit-transition: 0.5s;
-}
-
-.battleCharacterImgs:hover:not(.selectedCharacter) {
-    /* animation-name: selectCharAnimate;
-    animation-duration: 1s; */
-    z-index: 2;
-    transform: scale(1.25);
-}
-.battleSelectedCharacter {
-    /* animation-name: selectCharAnimate;
-    animation-duration: 1s; */
-
-    /* height: 125px; */
-}
-
-.shrinkLeave {
-    transform: scale(0);
-}
-.growAppear {
-    transform: scale(1);
 }
 
 .blueteam {
@@ -79,10 +55,6 @@
     /* width: 10rem; */
 }
 
-.opponent {
-    width: 14rem;
-}
-
-.you {
-    width: 14rem;
+.enemybankcols {
+    column-count: 3;
 }
