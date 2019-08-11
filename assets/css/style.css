@@ -10,35 +10,21 @@
 }
 
 .characterImgs {
-    z-index: 1;
-    height: 150px;
+    /* z-index: 1; */
+    /* height: 150px; */
     display: inline-block;
     position: relative;
-    border-radius: 25%;
+    /* border-radius: 25%; */
     background-color: black;
     transition: 0.5s;
     -webkit-transition: 0.5s;
 }
 
-.characterImgs:hover:not(.selectedCharacter) {
-    /* animation-name: selectCharAnimate;
-    animation-duration: 1s; */
-    z-index: 2;
-    transform: scale(1.25);
-}
-.selectedCharacter {
-    /* animation-name: selectCharAnimate;
-    animation-duration: 1s; */
-    z-index: 2;
-    height: 200px;
-}
-
 .battleCharacterImgs {
-    z-index: 1;
-    height: 150px;
+    /* height: 150px; */
     display: inline-block;
     position: relative;
-    border-radius: 25%;
+    /* border-radius: 25%; */
     background-color: black;
     transition: 0.5s;
     -webkit-transition: 0.5s;
@@ -53,8 +39,8 @@
 .battleSelectedCharacter {
     /* animation-name: selectCharAnimate;
     animation-duration: 1s; */
-    z-index: 2;
-    height: 125px;
+
+    /* height: 125px; */
 }
 
 .shrinkLeave {
@@ -65,11 +51,9 @@
 }
 
 .blueteam {
-    border-radius: 25%;
     background-color: blue;
 }
 .redteam {
-    border-radius: 25%;
     background-color: red;
 }
 
@@ -82,10 +66,23 @@
 }
 
 #battleSpace {
-    margin: 20px 10px;
+    margin: 50px 10px;
     padding: 10px;
 }
 
 #attack {
     margin: 20px auto;
+}
+
+.suchacard {
+    margin: 5px auto;
+    /* width: 10rem; */
+}
+
+.opponent {
+    width: 14rem;
+}
+
+.you {
+    width: 14rem;
 }
